@@ -1,0 +1,14 @@
+using ErpManagement.DataAccess.DbContext;
+using ErpManagement.Domain.Interfaces;
+using ErpManagement.Domain.Interfaces.Repositories.Transactions;
+using ErpManagement.Domain.Models.Transactions;
+
+namespace ErpManagement.DataAccess.Repositories.Transactions;
+
+public class SaleRepository : BaseRepository<Sale>, ISaleRepository
+{
+    public SaleRepository(ErpManagementDbContext context, ICurrentTenant currentTenant)
+        : base(context, currentTenant)
+    {
+    }
+}

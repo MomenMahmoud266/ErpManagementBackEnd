@@ -1,0 +1,5 @@
+﻿namespace ErpManagement.Domain.DTOs.Request.Shared.Country;
+
+public class SharGetAllFiltrationsForCountriesRequest : PaginationRequest
+{
+}
