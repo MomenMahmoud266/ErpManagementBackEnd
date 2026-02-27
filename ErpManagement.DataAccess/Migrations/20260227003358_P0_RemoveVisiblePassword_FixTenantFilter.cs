@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ErpManagement.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedBranchWarehouse : Migration
+    public partial class P0_RemoveVisiblePassword_FixTenantFilter : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,6 +45,11 @@ namespace ErpManagement.DataAccess.Migrations
             migrationBuilder.DropColumn(
                 name: "ZipCode",
                 table: "Warehouses");
+
+            migrationBuilder.DropColumn(
+                name: "VisiblePassword",
+                schema: "dbo",
+                table: "Auth_Users");
 
             migrationBuilder.RenameTable(
                 name: "Branch",
@@ -105,7 +110,7 @@ namespace ErpManagement.DataAccess.Migrations
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5basb1",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "094bf488-8e33-41a0-845b-b38c24587db6", "AQAAAAIAAYagAAAAEKdQ8nAFew2zAGYQUyAcUkAH54MyVZ9Ate1aTVwhILt/XTuBvtgfmVGe+1o8tgr/Kg==", "dba5423c-1ae3-4a4d-aa79-daa4a5df887f" });
+                values: new object[] { "2c48d027-ff7a-4452-aebf-13be2be00084", "AQAAAAIAAYagAAAAEFNZ+RYYG666I0TFovRSx/2W4K+uMn8NwlsOtZm1fMaB1HlgZsYDSVuWwJ8VT3yTrQ==", "3a2b988a-7b3e-4567-86cd-1fc5eb890fa7" });
 
             migrationBuilder.UpdateData(
                 schema: "dbo",
@@ -113,7 +118,7 @@ namespace ErpManagement.DataAccess.Migrations
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5basb2",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "9e9df6d9-63ed-49c5-980d-d5a41f17e0b1", "AQAAAAIAAYagAAAAED/YJM2i31dCVExqie4Dj8GXlffyyth5TX74Ij+q+BzqRW+9/DfeRNBqtUbqHVuJFw==", "0b7ad861-ae7c-494e-952c-a5ecaa1163af" });
+                values: new object[] { "5908834f-de53-4b10-a464-7c21be954b7f", "AQAAAAIAAYagAAAAEJKUrEVkcw/1A+rLf6wqxpH/PlS31oOb5ZCOAF7r4/gc4wVdwy5gLuz1DwLocXS71g==", "5aa0ef8b-a509-4784-900f-4881332702c0" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Branches_CountryId",
@@ -225,6 +230,14 @@ namespace ErpManagement.DataAccess.Migrations
                 maxLength: 20,
                 nullable: true);
 
+            migrationBuilder.AddColumn<string>(
+                name: "VisiblePassword",
+                schema: "dbo",
+                table: "Auth_Users",
+                type: "nvarchar(100)",
+                maxLength: 100,
+                nullable: true);
+
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Branch",
                 table: "Branch",
@@ -274,16 +287,16 @@ namespace ErpManagement.DataAccess.Migrations
                 table: "Auth_Users",
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5basb1",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "8ca9568c-95e4-40c9-8681-a8a5d8a78bf7", "AQAAAAIAAYagAAAAEHEYiLABpDu8nWxGK0SqiGrFzSvL1Oqz4ZF3YvKT2en3C1zHWnuxaaUkJdSl/iF0yQ==", "a995361b-36ee-401d-a57d-c654d618f49b" });
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp", "VisiblePassword" },
+                values: new object[] { "8ca9568c-95e4-40c9-8681-a8a5d8a78bf7", "AQAAAAIAAYagAAAAEHEYiLABpDu8nWxGK0SqiGrFzSvL1Oqz4ZF3YvKT2en3C1zHWnuxaaUkJdSl/iF0yQ==", "a995361b-36ee-401d-a57d-c654d618f49b", "devsuperadmin96" });
 
             migrationBuilder.UpdateData(
                 schema: "dbo",
                 table: "Auth_Users",
                 keyColumn: "Id",
                 keyValue: "b74ddd14-6340-4840-95c2-db12554843e5basb2",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "690a9cae-5821-49fa-81f9-1286b825b8ed", "AQAAAAIAAYagAAAAEPUliOA3TPorwAbmX6+qcmlWI7epuTK9i2XzT6woOxSSlcUuFMhCi8jzmu4TQG6Cnw==", "f518003a-fc4a-4f07-8999-ac9e249dfacd" });
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp", "VisiblePassword" },
+                values: new object[] { "690a9cae-5821-49fa-81f9-1286b825b8ed", "AQAAAAIAAYagAAAAEPUliOA3TPorwAbmX6+qcmlWI7epuTK9i2XzT6woOxSSlcUuFMhCi8jzmu4TQG6Cnw==", "f518003a-fc4a-4f07-8999-ac9e249dfacd", "devadmin96" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Warehouses_TenantId",

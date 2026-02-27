@@ -6,7 +6,7 @@ namespace ErpManagement.API.Areas.People.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SuppliersController(ISupplierService service) : ControllerBase

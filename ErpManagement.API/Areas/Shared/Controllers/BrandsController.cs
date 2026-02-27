@@ -2,7 +2,7 @@ namespace ErpManagement.API.Areas.Shared.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class BrandsController(IBrandService service) : ControllerBase

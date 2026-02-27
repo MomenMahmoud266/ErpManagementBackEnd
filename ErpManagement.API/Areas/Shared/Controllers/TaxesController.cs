@@ -3,7 +3,7 @@
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
 [ApiController]
-[AllowAnonymous]
+[Authorize]
 [Route("api/[controller]")]
 public class TaxesController(ITaxService service) : ControllerBase
 {

@@ -6,6 +6,7 @@ namespace ErpManagement.API.Areas.Product.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class StockTransfersController : ControllerBase

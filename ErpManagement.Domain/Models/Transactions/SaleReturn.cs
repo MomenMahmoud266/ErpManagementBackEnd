@@ -5,10 +5,11 @@ using ErpManagement.Domain.Models.Core;
 using ErpManagement.Domain.Models.Organization;
 using ErpManagement.Domain.Models.People;
 using ErpManagement.Domain.Models.Products;
+using ErpManagement.Domain.Models.Shared;
 
 namespace ErpManagement.Domain.Models.Transactions;
 
-public class SaleReturn : BaseEntity
+public class SaleReturn : BaseEntity, ITenantEntity
 {
     public int TenantId { get; set; }
     public string? UserId { get; set; }

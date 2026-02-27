@@ -5,6 +5,7 @@ namespace ErpManagement.API.Areas.Shared.Controllers;
 
 [Area(Modules.Product)]
 [ApiExplorerSettings(GroupName = Modules.Product)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class VariantsController(IVariantService service) : ControllerBase

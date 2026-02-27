@@ -23,6 +23,12 @@ public class SaleReturnCreateRequest
     public string? Remark { get; set; }
     public string? ReturnNote { get; set; }
 
+    /// <summary>Cash / Card / None — if Cash and refund > 0, a CashOut movement is created.</summary>
+    [MaxLength(50)]
+    public string RefundType { get; set; } = "Cash";
+
+    public decimal RefundAmount { get; set; } = 0;
+
     [Required]
     public List<SaleReturnItemCreateRequest> Items { get; set; } = new();
 }

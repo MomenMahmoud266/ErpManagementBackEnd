@@ -4,7 +4,7 @@
 [ApiExplorerSettings(GroupName = Modules.Shared)]
 [ApiController]
 [Route("api/[controller]")]
-[AllowAnonymous]
+[Authorize]
 public class UnitsController(IUnitService service) : ControllerBase
 {
     private readonly IUnitService _service = service;

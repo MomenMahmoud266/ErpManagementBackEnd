@@ -88,7 +88,8 @@ public class AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper, UserM
             Email = user.Email!,
             RoleNames = currentUserRoles,
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            ExpiresOn = jwtSecurityToken.ValidTo
+            ExpiresOn = jwtSecurityToken.ValidTo,
+            TenantId = user.TenantId
         };
 
         return new Response<AuthLoginUserResponse>
@@ -149,8 +150,9 @@ public class AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper, UserM
 
         return new Response<string>()
         {
-            IsSuccess = true,
-            Data = user.VisiblePassword
+            IsSuccess = false,
+            Error = err,
+            Message = "This endpoint has been removed for security reasons."
         };
     }
 
@@ -247,7 +249,6 @@ public class AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper, UserM
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
 
-        user.VisiblePassword = model.NewPassword;
         _unitOfWork.Users.Update(user);
         await _unitOfWork.CompleteAsync();
 
@@ -293,13 +294,8 @@ public class AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper, UserM
         }
 
 
-        var result = await _userManager.ChangePasswordAsync(user, SuperAdmin.Password, newPassword);
-
-
-        //var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
-
-        user.VisiblePassword = SuperAdmin.Password = newPassword;
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
         _unitOfWork.Users.Update(user);
         await _unitOfWork.CompleteAsync();
@@ -320,7 +316,7 @@ public class AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper, UserM
         {
             Message = string.Format(_sharLocalizer[Localization.Updated]),
             IsSuccess = true,
-            Data = newPassword
+            Data = "Password updated successfully."
         };
 
     }

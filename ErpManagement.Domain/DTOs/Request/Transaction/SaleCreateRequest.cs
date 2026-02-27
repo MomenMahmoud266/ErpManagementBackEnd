@@ -14,6 +14,9 @@ public class SaleCreateRequest
 
     public int? BillerId { get; set; }
 
+    [Required(ErrorMessage = Annotations.FieldIsRequired)]
+    public int BranchId { get; set; }
+
     [MaxLength(50)]
     public string? SaleCode { get; set; }
 
@@ -24,6 +27,18 @@ public class SaleCreateRequest
 
     [MaxLength(1000)]
     public string? Note { get; set; }
+
+    // POS payment fields
+    public decimal PaidAmount { get; set; } = 0;
+
+    [MaxLength(50)]
+    public string PaymentType { get; set; } = "Cash";
+
+    [MaxLength(100)]
+    public string? TransactionNumber { get; set; }
+
+    [MaxLength(100)]
+    public string? AccountNumber { get; set; }
 
     public ICollection<SaleItemCreateRequest> Items { get; set; } = new List<SaleItemCreateRequest>();
 }

@@ -6,7 +6,7 @@ namespace ErpManagement.API.Areas.Organization.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class BranchesController(IBranchService service) : ControllerBase

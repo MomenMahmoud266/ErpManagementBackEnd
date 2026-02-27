@@ -28,11 +28,13 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
     /// quantityDelta:
     ///   > 0  => stock IN (e.g. new purchase, apply on update)
     ///   < 0  => stock OUT (e.g. rollback on update, delete)
+    /// unitCost: unit purchase cost, used to recompute AverageCost on stock IN movements.
     /// </summary>
     private async Task AdjustInventoryForPurchaseAsync(
         int warehouseId,
         int productId,
         decimal quantityDelta,
+        decimal unitCost,
         string movementType,
         string direction,
         DateTime movementDate,
@@ -51,13 +53,25 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
                 WarehouseId = warehouseId,
                 ProductId = productId,
                 Quantity = 0,
+                AverageCost = 0,
                 IsActive = true
             };
 
             await _unitOfWork.WarehouseProducts.CreateAsync(wp);
         }
 
+        decimal oldQty = wp.Quantity;
+        decimal oldAvg = wp.AverageCost;
         wp.Quantity += quantityDelta;
+
+        // Recompute Weighted Average Cost only on stock IN
+        if (quantityDelta > 0 && wp.Quantity > 0)
+        {
+            wp.AverageCost = oldQty > 0
+                ? ((oldQty * oldAvg) + (quantityDelta * unitCost)) / wp.Quantity
+                : unitCost;
+        }
+
         _unitOfWork.WarehouseProducts.Update(wp);
 
         var movement = new StockMovement
@@ -284,6 +298,7 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
                     warehouseId: warehouseId,
                     productId: it.ProductId,
                     quantityDelta: it.Quantity,               // stock IN
+                    unitCost: it.UnitPrice,
                     movementType: "Purchase",
                     direction: "In",
                     movementDate: purchase.PurchaseDate,
@@ -332,6 +347,7 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
                     warehouseId: warehouseId,
                     productId: oldItem.ProductId,
                     quantityDelta: -oldItem.Quantity,             // stock OUT (rollback)
+                    unitCost: 0,                                  // not used for OUT
                     movementType: "PurchaseUpdateRollback",
                     direction: "Out",
                     movementDate: DateTime.UtcNow,
@@ -403,6 +419,7 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
                     warehouseId: warehouseId,
                     productId: it.ProductId,
                     quantityDelta: it.Quantity,              // stock IN (new state)
+                    unitCost: it.UnitPrice,
                     movementType: "PurchaseUpdateApply",
                     direction: "In",
                     movementDate: existing.PurchaseDate,
@@ -478,6 +495,7 @@ public class PurchaseService(IUnitOfWork unitOfWork, IStringLocalizer<SharedReso
                     warehouseId: warehouseId,
                     productId: item.ProductId,
                     quantityDelta: -item.Quantity,          // stock OUT
+                    unitCost: 0,                            // not used for OUT
                     movementType: "PurchaseDelete",
                     direction: "Out",
                     movementDate: DateTime.UtcNow,

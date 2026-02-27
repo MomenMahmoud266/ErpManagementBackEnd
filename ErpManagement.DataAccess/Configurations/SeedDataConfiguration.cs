@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ErpManagement.Domain.Models.Core;
 using ErpManagement.Domain.Models.Auth;
+using ErpManagement.Domain.Enums;
 
 namespace ErpManagement.DataAccess.Configurations;
 
@@ -28,7 +29,13 @@ public static class SeedDataConfiguration
                 DeleteDate = null,
                 InsertBy = null,
                 UpdateBy = null,
-                DeleteBy = null
+                DeleteBy = null,
+                BusinessType = BusinessType.Retail,
+                EnableInventory = true,
+                EnableAppointments = false,
+                EnableMemberships = false,
+                EnableTables = false,
+                EnableKitchenRouting = false
             }
         );
 
@@ -76,8 +83,7 @@ public static class SeedDataConfiguration
                 LockoutEnabled = false,
                 AccessFailedCount = 0,
                 TenantId = 1, // Valid tenant!
-                IsActive = true,
-                VisiblePassword = "devsuperadmin96"
+                IsActive = true
             },
             new ApplicationUser
             {
@@ -95,8 +101,7 @@ public static class SeedDataConfiguration
                 LockoutEnabled = false,
                 AccessFailedCount = 0,
                 TenantId = 1, // Valid tenant!
-                IsActive = true,
-                VisiblePassword = "devadmin96"
+                IsActive = true
             }
         );
 

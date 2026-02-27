@@ -9,6 +9,7 @@ namespace ErpManagement.API.Areas.Transactions.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SaleInvoicesController(ISaleInvoiceService service) : ControllerBase

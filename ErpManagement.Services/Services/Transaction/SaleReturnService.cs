@@ -1,3 +1,4 @@
+using ErpManagement.Domain.Constants.Enums;
 using ErpManagement.Domain.DTOs.Request.Transactions;
 using ErpManagement.Domain.DTOs.Response.Transactions;
 using ErpManagement.Domain.Models.Inventory;
@@ -272,6 +273,40 @@ public class SaleReturnService(IUnitOfWork unitOfWork, IStringLocalizer<SharedRe
         #endregion
 
         await _hubContext.Clients.All.BroadcastMessage();
+
+        #region Cash-Out Movement for Cash Refunds
+        if (string.Equals(model.RefundType, "Cash", StringComparison.OrdinalIgnoreCase)
+            && model.RefundAmount > 0)
+        {
+            var cashbox = await _unitOfWork.Cashboxes
+                .GetFirstOrDefaultAsync(x => x.BranchId == sale.BranchId && x.IsActive);
+
+            if (cashbox is not null)
+            {
+                var openShift = await _unitOfWork.CashboxShifts
+                    .GetFirstOrDefaultAsync(x => x.CashboxId == cashbox.Id && !x.IsClosed);
+
+                if (openShift is not null)
+                {
+                    var cashMovement = new CashMovement
+                    {
+                        CashboxShiftId = openShift.Id,
+                        Type = CashMovementType.CashOut,
+                        Amount = model.RefundAmount,
+                        Reason = "Sale return refund",
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedByUserId = sr.UserId ?? string.Empty,
+                        ReferenceType = "SaleReturn",
+                        ReferenceId = sr.Id,
+                        IsActive = true
+                    };
+
+                    await _unitOfWork.CashMovements.CreateAsync(cashMovement);
+                    await _unitOfWork.CompleteAsync();
+                }
+            }
+        }
+        #endregion
 
         return new() { Data = model, IsSuccess = true, Message = _sharLocalizer[Localization.Done] };
     }

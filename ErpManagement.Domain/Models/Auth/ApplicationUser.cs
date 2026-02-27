@@ -23,9 +23,6 @@ public class ApplicationUser : IdentityUser
 
     public bool IsActive { get; set; } = true;
 
-    [MaxLength(100)]
-    public string? VisiblePassword { get; set; }
-
     public DateTime? LastLoginDate { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? InsertDate { get; set; }

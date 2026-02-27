@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ErpManagement.Domain.Enums;
 using ErpManagement.Domain.Models.Shared;
 using ErpManagement.Domain.Models.Auth;
 using ErpManagement.Domain.Models.Organization;
@@ -31,6 +32,42 @@ public class Tenant : BaseEntity
     public string? Address { get; set; }
 
     public bool IsActive { get; set; } = true;
+
+    // ── Subscription / Trial fields ──────────────────────────────────
+    public DateTime? TrialEndsAt { get; set; }
+    public DateTime? SubscriptionEndsAt { get; set; }
+    public bool IsSubscriptionActive { get; set; } = true;
+
+    // Computed helper (not mapped to DB)
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public bool IsAccessAllowed =>
+        IsActive &&
+        (IsSubscriptionActive || (SubscriptionEndsAt.HasValue && SubscriptionEndsAt >= DateTime.UtcNow)) &&
+        (!TrialEndsAt.HasValue || TrialEndsAt >= DateTime.UtcNow || IsSubscriptionActive);
+
+    public BusinessType BusinessType { get; set; } = BusinessType.Retail;
+
+    public bool EnableInventory { get; set; } = true;
+    public bool EnableAppointments { get; set; } = false;
+    public bool EnableMemberships { get; set; } = false;
+    public bool EnableTables { get; set; } = false;
+    public bool EnableKitchenRouting { get; set; } = false;
+
+    // Inventory costing settings
+    [MaxLength(20)]
+    public string InventoryMode { get; set; } = "Perpetual"; // "Perpetual" or "Periodic"
+    [MaxLength(20)]
+    public string CostingMethod { get; set; } = "Average"; // "Average" (MVP), future: "FIFO"
+
+    // International / localization settings
+    [MaxLength(10)]
+    public string CurrencyCode { get; set; } = "EGP";   // ISO 4217
+    [MaxLength(10)]
+    public string CountryCode { get; set; } = "EG";     // ISO 3166-1 alpha-2
+    [MaxLength(100)]
+    public string TimeZoneId { get; set; } = "Africa/Cairo";
+    [MaxLength(50)]
+    public string TaxLabel { get; set; } = "VAT";
 
     // Navigation properties
     public virtual ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>();

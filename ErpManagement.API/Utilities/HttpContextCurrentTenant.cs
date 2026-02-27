@@ -16,16 +16,12 @@ public class HttpContextCurrentTenant : ICurrentTenant
         _httpContextAccessor = httpContextAccessor;
     }
 
-    // For Day 2: return fixed tenant (1). Later, replace with JWT claim reading:
-    // var tenantClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("tenantId")?.Value;
-    // int.TryParse(tenantClaim, out var tid);
-    // return tid > 0 ? tid : 1;
     public int TenantId
     {
         get
         {
-            // Temporary fixed tenant for early development
-            return 1;
+            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ErpManagement.Domain.Constants.Statics.SDStatic.RequestClaims.TenantId)?.Value;
+            return int.TryParse(claim, out var tid) && tid > 0 ? tid : 0;
         }
     }
 }

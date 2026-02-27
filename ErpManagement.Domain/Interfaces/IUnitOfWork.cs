@@ -1,4 +1,6 @@
-﻿using ErpManagement.Domain.Interfaces.Repositories.Organization;
+﻿using ErpManagement.Domain.Interfaces.Repositories.Core;
+using ErpManagement.Domain.Interfaces.Repositories.Inventory;
+using ErpManagement.Domain.Interfaces.Repositories.Organization;
 using ErpManagement.Domain.Interfaces.Repositories.People;
 using ErpManagement.Domain.Interfaces.Repositories.Products;
 using ErpManagement.Domain.Interfaces.Repositories.Shared;
@@ -64,7 +66,26 @@ public interface IUnitOfWork : IDisposable
     ISaleReturnRepository SaleReturns { get; }                     // <-- added
     ISaleReturnItemRepository SaleReturnItems { get; }             // <-- added
 
+    // Clinic / Salon
+    IAppointmentRepository Appointments { get; }
+    IAppointmentItemRepository AppointmentItems { get; }
 
+    // Gym
+    IMembershipPlanRepository MembershipPlans { get; }
+    IMemberSubscriptionRepository MemberSubscriptions { get; }
+    IMemberCheckInRepository MemberCheckIns { get; }
+
+    // Cashbox
+    ICashboxRepository Cashboxes { get; }
+    ICashboxShiftRepository CashboxShifts { get; }
+    ICashMovementRepository CashMovements { get; }
+
+    // Inventory periods (periodic costing)
+    IInventoryPeriodRepository InventoryPeriods { get; }
+    IPhysicalCountRepository PhysicalCounts { get; }
+
+    // Core
+    ITenantRepository Tenants { get; }
 
     Task<int> CompleteAsync();
 }

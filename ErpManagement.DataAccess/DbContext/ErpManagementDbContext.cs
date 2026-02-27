@@ -9,6 +9,8 @@ using ErpManagement.Domain.Models.People;
 using ErpManagement.Domain.Models.Products;
 using ErpManagement.Domain.Models.Transactions;
 using ErpManagement.Domain.Models.Inventory;
+using ErpManagement.Domain.Models.Clinic;
+using ErpManagement.Domain.Models.Gym;
 
 namespace ErpManagement.DataAccess.DbContext;
 
@@ -77,6 +79,22 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
 
     // Inventory
     public DbSet<StockMovement> StockMovements { get; set; }
+    public DbSet<InventoryPeriod> InventoryPeriods { get; set; }
+    public DbSet<PhysicalCount> PhysicalCounts { get; set; }
+
+    // Clinic / Salon
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<AppointmentItem> AppointmentItems => Set<AppointmentItem>();
+
+    // Gym
+    public DbSet<MembershipPlan> MembershipPlans => Set<MembershipPlan>();
+    public DbSet<MemberSubscription> MemberSubscriptions => Set<MemberSubscription>();
+    public DbSet<MemberCheckIn> MemberCheckIns => Set<MemberCheckIn>();
+
+    // Cashbox
+    public DbSet<Cashbox> Cashboxes => Set<Cashbox>();
+    public DbSet<CashboxShift> CashboxShifts => Set<CashboxShift>();
+    public DbSet<CashMovement> CashMovements => Set<CashMovement>();
 
     #endregion
 
@@ -120,11 +138,119 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
             .WithMany(c => c.Expenses)
             .HasForeignKey(e => e.ExpenseCategoryId);
 
+        // Clinic / Appointment relationships
+        modelBuilder.Entity<Appointment>()
+            .HasMany(a => a.Items)
+            .WithOne(i => i.Appointment)
+            .HasForeignKey(i => i.AppointmentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Branch)
+            .WithMany()
+            .HasForeignKey(a => a.BranchId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Customer)
+            .WithMany()
+            .HasForeignKey(a => a.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Sale)
+            .WithMany()
+            .HasForeignKey(a => a.SaleId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<AppointmentItem>()
+            .HasOne(ai => ai.Product)
+            .WithMany()
+            .HasForeignKey(ai => ai.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Gym relationships
+        modelBuilder.Entity<MembershipPlan>()
+            .HasOne(p => p.Branch)
+            .WithMany()
+            .HasForeignKey(p => p.BranchId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MembershipPlan>()
+            .HasOne(p => p.Product)
+            .WithMany()
+            .HasForeignKey(p => p.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberSubscription>()
+            .HasOne(s => s.Branch)
+            .WithMany()
+            .HasForeignKey(s => s.BranchId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberSubscription>()
+            .HasOne(s => s.Customer)
+            .WithMany()
+            .HasForeignKey(s => s.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberSubscription>()
+            .HasOne(s => s.MembershipPlan)
+            .WithMany(p => p.Subscriptions)
+            .HasForeignKey(s => s.MembershipPlanId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberSubscription>()
+            .HasOne(s => s.LastSale)
+            .WithMany()
+            .HasForeignKey(s => s.LastSaleId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberSubscription>()
+            .HasMany(s => s.CheckIns)
+            .WithOne(c => c.MemberSubscription)
+            .HasForeignKey(c => c.MemberSubscriptionId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberCheckIn>()
+            .HasOne(c => c.Branch)
+            .WithMany()
+            .HasForeignKey(c => c.BranchId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MemberCheckIn>()
+            .HasOne(c => c.Customer)
+            .WithMany()
+            .HasForeignKey(c => c.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Cashbox relationships
+        modelBuilder.Entity<Cashbox>()
+            .HasOne(c => c.Branch)
+            .WithMany()
+            .HasForeignKey(c => c.BranchId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<CashboxShift>()
+            .HasOne(s => s.Cashbox)
+            .WithMany(c => c.Shifts)
+            .HasForeignKey(s => s.CashboxId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<CashMovement>()
+            .HasOne(m => m.CashboxShift)
+            .WithMany(s => s.Movements)
+            .HasForeignKey(m => m.CashboxShiftId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         #endregion
 
         // ✅ Apply global filters ONLY once at the end
         ApplyGlobalFilters(modelBuilder);
     }
+
+    // Per-request tenant id — evaluated at query time, not at model-build time
+    public int CurrentTenantId => _currentTenant.TenantId;
 
     // ✅ Keep this method - it correctly applies both filters
     private void ApplyGlobalFilters(ModelBuilder modelBuilder)
@@ -150,12 +276,15 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
                 filter = notDeleted;
             }
 
-            // 2) Tenant filter for all ITenantEntity
+            // 2) Tenant filter — reference DbContext.CurrentTenantId (per-request, not frozen constant)
             if (typeof(ITenantEntity).IsAssignableFrom(clrType))
             {
                 var tenantProp = Expression.Property(param, nameof(ITenantEntity.TenantId));
-                var tenantValue = Expression.Constant(_currentTenant.TenantId);
-                var tenantMatch = Expression.Equal(tenantProp, tenantValue);
+                // Expression.Constant(this) binds to the live DbContext instance so the value
+                // is read at query execution time rather than frozen at model-build time.
+                var dbContextConstant = Expression.Constant(this);
+                var currentTenantIdProp = Expression.Property(dbContextConstant, nameof(CurrentTenantId));
+                var tenantMatch = Expression.Equal(tenantProp, currentTenantIdProp);
 
                 filter = filter == null
                     ? tenantMatch
@@ -168,6 +297,12 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
             var lambda = Expression.Lambda(filter, param);
             entityType.SetQueryFilter(lambda);
         }
+    }
+
+    public override int SaveChanges()
+    {
+        EnforceTenantOnAddedEntities();
+        return base.SaveChanges();
     }
 
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
@@ -200,6 +335,30 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
                 ((BaseEntity)entityEntry.Entity).IsDeleted = true;
             }
         }
+
+        EnforceTenantOnAddedEntities();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void EnforceTenantOnAddedEntities()
+    {
+        foreach (var entry in ChangeTracker.Entries<ITenantEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                if (entry.Entity.TenantId == 0)
+                {
+                    if (CurrentTenantId == 0)
+                        throw new UnauthorizedAccessException("Cannot save tenant-scoped entity: no authenticated tenant.");
+                    entry.Entity.TenantId = CurrentTenantId;
+                }
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                var originalTenantId = (int)entry.OriginalValues[nameof(ITenantEntity.TenantId)]!;
+                if (entry.Entity.TenantId != originalTenantId)
+                    throw new InvalidOperationException("Modifying TenantId on an existing entity is not allowed.");
+            }
+        }
     }
 }

@@ -5,16 +5,18 @@ using ErpManagement.Domain.Models.Organization;
 using ErpManagement.Domain.Models.People;
 using ErpManagement.Domain.Models.Shared;
 using ErpManagement.Domain.Models.Auth;
+using ErpManagement.Domain.Models.Shared;
 
 namespace ErpManagement.Domain.Models.Transactions;
 
-public class Sale : BaseEntity
+public class Sale : BaseEntity, ITenantEntity
 {
     public int TenantId { get; set; }
     public string? UserId { get; set; }
     public int CustomerId { get; set; }
     public int? WarehouseId { get; set; }
     public int? BillerId { get; set; }
+    public int BranchId { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -51,6 +53,7 @@ public class Sale : BaseEntity
     public virtual ApplicationUser? User { get; set; }
     public virtual Customer Customer { get; set; } = null!;
     public virtual Warehouse? Warehouse { get; set; }
+    public virtual Branch Branch { get; set; } = null!;
     public virtual Biller? Biller { get; set; }
     
     public virtual ICollection<SaleItem> Items { get; set; } = new HashSet<SaleItem>();

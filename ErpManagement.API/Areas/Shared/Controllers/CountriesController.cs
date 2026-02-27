@@ -2,6 +2,7 @@
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class CountriesController(ICountryService service) : ControllerBase

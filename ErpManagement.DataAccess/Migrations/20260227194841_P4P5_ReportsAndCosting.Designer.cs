@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ErpManagement.DataAccess.Migrations
 {
     [DbContext(typeof(ErpManagementDbContext))]
-    [Migration("20251208123827_FixedBranchWarehouse")]
-    partial class FixedBranchWarehouse
+    [Migration("20260227194841_P4P5_ReportsAndCosting")]
+    partial class P4P5_ReportsAndCosting
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,10 +233,6 @@ namespace ErpManagement.DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("VisiblePassword")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GenderId");
@@ -258,7 +254,7 @@ namespace ErpManagement.DataAccess.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5basb1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "094bf488-8e33-41a0-845b-b38c24587db6",
+                            ConcurrencyStamp = "5cdd2c38-da64-48c4-bb32-763ec20713eb",
                             Email = "devasuperdmin90@gmail.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -266,19 +262,18 @@ namespace ErpManagement.DataAccess.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEVSUPERADMIN96@GMAIL.COM",
                             NormalizedUserName = "MR_DEVSUPERADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKdQ8nAFew2zAGYQUyAcUkAH54MyVZ9Ate1aTVwhILt/XTuBvtgfmVGe+1o8tgr/Kg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEB/iKYXN2qm3Y1PvbLgTfue9DAKPJA+AlUfoCx2YzNc8UIBSuxkAswUWc+UrAsyVQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "dba5423c-1ae3-4a4d-aa79-daa4a5df887f",
+                            SecurityStamp = "8675d572-3915-4da9-9597-19376d324cb5",
                             TenantId = 1,
                             TwoFactorEnabled = false,
-                            UserName = "Mr_DevSuperAdmin",
-                            VisiblePassword = "devsuperadmin96"
+                            UserName = "Mr_DevSuperAdmin"
                         },
                         new
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5basb2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9e9df6d9-63ed-49c5-980d-d5a41f17e0b1",
+                            ConcurrencyStamp = "7fdcc909-56ee-4651-9f22-9a02e988f435",
                             Email = "devadmin90@gmail.com",
                             EmailConfirmed = true,
                             IsActive = true,
@@ -286,13 +281,12 @@ namespace ErpManagement.DataAccess.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DEVADMIN96@GMAIL.COM",
                             NormalizedUserName = "MR_DEVADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAED/YJM2i31dCVExqie4Dj8GXlffyyth5TX74Ij+q+BzqRW+9/DfeRNBqtUbqHVuJFw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEX/TZvwNQlwSPMLCV4OqIi7cVarFsZ3BNCrR7btz3Ido0Vq7BGaICKQNTVnnox1kw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0b7ad861-ae7c-494e-952c-a5ecaa1163af",
+                            SecurityStamp = "9f21af1c-2a81-4bd4-a814-2005dbc23168",
                             TenantId = 1,
                             TwoFactorEnabled = false,
-                            UserName = "Mr_DevAdmin",
-                            VisiblePassword = "devadmin96"
+                            UserName = "Mr_DevAdmin"
                         });
                 });
 
@@ -476,6 +470,136 @@ namespace ErpManagement.DataAccess.Migrations
                     b.ToTable("Auth_UserTokens", "dbo");
                 });
 
+            modelBuilder.Entity("ErpManagement.Domain.Models.Clinic.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SaleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StaffUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SaleId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Clinic.AppointmentItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("AppointmentItems");
+                });
+
             modelBuilder.Entity("ErpManagement.Domain.Models.Core.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -655,6 +779,9 @@ namespace ErpManagement.DataAccess.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int>("BusinessType")
+                        .HasColumnType("int");
+
                     b.Property<string>("ContactEmail")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -662,6 +789,21 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Property<string>("ContactPhone")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CostingMethod")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("DeleteBy")
                         .HasColumnType("nvarchar(max)");
@@ -672,6 +814,246 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("EnableAppointments")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnableInventory")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnableKitchenRouting")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnableMemberships")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EnableTables")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InventoryMode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSubscriptionActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("SubscriptionEndsAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TaxLabel")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("TrialEndsAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Default Address",
+                            BusinessType = 1,
+                            ContactEmail = "admin@tenant.local",
+                            ContactPhone = "+1234567890",
+                            CostingMethod = "Average",
+                            CountryCode = "EG",
+                            CurrencyCode = "EGP",
+                            Description = "Default tenant for development",
+                            EnableAppointments = false,
+                            EnableInventory = true,
+                            EnableKitchenRouting = false,
+                            EnableMemberships = false,
+                            EnableTables = false,
+                            InventoryMode = "Perpetual",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsSubscriptionActive = true,
+                            Name = "Default Tenant",
+                            TaxLabel = "VAT",
+                            TimeZoneId = "Africa/Cairo"
+                        });
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MemberCheckIn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CheckInAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MemberSubscriptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("MemberSubscriptionId");
+
+                    b.ToTable("MemberCheckIns");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MemberSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastSaleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MembershipPlanId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LastSaleId");
+
+                    b.HasIndex("MembershipPlanId");
+
+                    b.ToTable("MemberSubscriptions");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MembershipPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DurationDays")
+                        .HasColumnType("int");
 
                     b.Property<string>("InsertBy")
                         .HasColumnType("nvarchar(max)");
@@ -690,6 +1072,15 @@ namespace ErpManagement.DataAccess.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UpdateBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -698,20 +1089,11 @@ namespace ErpManagement.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tenants");
+                    b.HasIndex("BranchId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Default Address",
-                            ContactEmail = "admin@tenant.local",
-                            ContactPhone = "+1234567890",
-                            Description = "Default tenant for development",
-                            IsActive = true,
-                            IsDeleted = false,
-                            Name = "Default Tenant"
-                        });
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("MembershipPlans");
                 });
 
             modelBuilder.Entity("ErpManagement.Domain.Models.Hr.HrGender", b =>
@@ -753,6 +1135,139 @@ namespace ErpManagement.DataAccess.Migrations
                             NameEn = "Female",
                             NameTr = "Dişi"
                         });
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.InventoryPeriod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BeginningValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("CogsValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("EndingValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("PurchasesValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("InventoryPeriods");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.PhysicalCount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CostUsed")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CountQty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InventoryPeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("LineValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryPeriodId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("PhysicalCounts");
                 });
 
             modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.StockMovement", b =>
@@ -2039,6 +2554,198 @@ namespace ErpManagement.DataAccess.Migrations
                     b.ToTable("Shar_Supplier");
                 });
 
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.CashMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CashboxShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("ReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReferenceType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CashboxShiftId");
+
+                    b.ToTable("CashMovements");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.Cashbox", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Cashboxes");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.CashboxShift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CashboxId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("ClosingCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Difference")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ExpectedCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("InsertBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("OpenedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OpenedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("OpeningCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CashboxId");
+
+                    b.ToTable("CashboxShifts");
+                });
+
             modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.Expense", b =>
                 {
                     b.Property<int>("Id")
@@ -2603,6 +3310,9 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Property<int?>("BillerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
@@ -2677,6 +3387,8 @@ namespace ErpManagement.DataAccess.Migrations
 
                     b.HasIndex("BillerId");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("TenantId");
@@ -2697,6 +3409,9 @@ namespace ErpManagement.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CostAtSale")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DeleteBy")
@@ -2979,6 +3694,9 @@ namespace ErpManagement.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AverageCost")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("DeleteBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -3107,6 +3825,51 @@ namespace ErpManagement.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ErpManagement.Domain.Models.Clinic.Appointment", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.People.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Transactions.Sale", "Sale")
+                        .WithMany()
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Sale");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Clinic.AppointmentItem", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Clinic.Appointment", "Appointment")
+                        .WithMany("Items")
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ErpManagement.Domain.Models.Core.State", b =>
                 {
                     b.HasOne("ErpManagement.Domain.Models.Core.Country", "Country")
@@ -3116,6 +3879,124 @@ namespace ErpManagement.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MemberCheckIn", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.People.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Gym.MemberSubscription", "MemberSubscription")
+                        .WithMany("CheckIns")
+                        .HasForeignKey("MemberSubscriptionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("MemberSubscription");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MemberSubscription", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.People.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Transactions.Sale", "LastSale")
+                        .WithMany()
+                        .HasForeignKey("LastSaleId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ErpManagement.Domain.Models.Gym.MembershipPlan", "MembershipPlan")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("MembershipPlanId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("LastSale");
+
+                    b.Navigation("MembershipPlan");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MembershipPlan", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.InventoryPeriod", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.PhysicalCount", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Inventory.InventoryPeriod", "InventoryPeriod")
+                        .WithMany("PhysicalCounts")
+                        .HasForeignKey("InventoryPeriodId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("InventoryPeriod");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.StockMovement", b =>
@@ -3425,6 +4306,39 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.CashMovement", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Transactions.CashboxShift", "CashboxShift")
+                        .WithMany("Movements")
+                        .HasForeignKey("CashboxShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CashboxShift");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.Cashbox", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.CashboxShift", b =>
+                {
+                    b.HasOne("ErpManagement.Domain.Models.Transactions.Cashbox", "Cashbox")
+                        .WithMany("Shifts")
+                        .HasForeignKey("CashboxId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Cashbox");
+                });
+
             modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.Expense", b =>
                 {
                     b.HasOne("ErpManagement.Domain.Models.Products.Category", null)
@@ -3611,6 +4525,12 @@ namespace ErpManagement.DataAccess.Migrations
                         .HasForeignKey("BillerId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("ErpManagement.Domain.Models.Organization.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("ErpManagement.Domain.Models.People.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId")
@@ -3634,6 +4554,8 @@ namespace ErpManagement.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Biller");
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Customer");
 
@@ -3762,6 +4684,11 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Navigation("Suppliers");
                 });
 
+            modelBuilder.Entity("ErpManagement.Domain.Models.Clinic.Appointment", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("ErpManagement.Domain.Models.Core.Country", b =>
                 {
                     b.Navigation("Billers");
@@ -3813,6 +4740,21 @@ namespace ErpManagement.DataAccess.Migrations
                     b.Navigation("Users");
 
                     b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MemberSubscription", b =>
+                {
+                    b.Navigation("CheckIns");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Gym.MembershipPlan", b =>
+                {
+                    b.Navigation("Subscriptions");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Inventory.InventoryPeriod", b =>
+                {
+                    b.Navigation("PhysicalCounts");
                 });
 
             modelBuilder.Entity("ErpManagement.Domain.Models.Organization.Branch", b =>
@@ -3901,6 +4843,16 @@ namespace ErpManagement.DataAccess.Migrations
             modelBuilder.Entity("ErpManagement.Domain.Models.Products.Unit", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.Cashbox", b =>
+                {
+                    b.Navigation("Shifts");
+                });
+
+            modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.CashboxShift", b =>
+                {
+                    b.Navigation("Movements");
                 });
 
             modelBuilder.Entity("ErpManagement.Domain.Models.Transactions.ExpenseCategory", b =>

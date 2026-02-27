@@ -15,6 +15,9 @@ public class WarehouseProduct : TenantEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal? ReservedQuantity { get; set; } // optional (for orders, POS holds)
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal AverageCost { get; set; } = 0; // Weighted Average Cost for perpetual costing
+
     // Navigation
     public virtual Warehouse Warehouse { get; set; } = null!;
     public virtual Product Product { get; set; } = null!;

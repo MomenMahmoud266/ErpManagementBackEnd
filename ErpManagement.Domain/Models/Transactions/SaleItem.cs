@@ -27,6 +27,9 @@ public class SaleItem : BaseEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal TotalAmount { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal CostAtSale { get; set; } = 0; // Snapshot of AverageCost at time of sale (perpetual WAC)
+
     // Navigation properties
     public virtual Sale Sale { get; set; } = null!;
     public virtual Product Product { get; set; } = null!;

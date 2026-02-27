@@ -57,6 +57,12 @@ public static class InjectedDependenciesExtensions
         services.AddScoped<ISaleInvoiceService, SaleInvoiceService>();
         services.AddScoped<IPurchaseInvoiceService, PurchaseInvoiceService>();
         services.AddScoped<IExpenseInvoiceService, ExpenseInvoiceService>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<IMembershipService, MembershipService>();
+        services.AddScoped<ICashboxService, CashboxService>();
+        services.AddScoped<IStatementsService, StatementsService>();
+        services.AddScoped<IReportsService, ReportsService>();
+        services.AddScoped<IInventoryPeriodService, InventoryPeriodService>();
         return services;
     }
 }

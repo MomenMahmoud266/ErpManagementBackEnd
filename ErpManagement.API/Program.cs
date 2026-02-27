@@ -1,3 +1,4 @@
+using ErpManagement.API.Middlewares;
 using ErpManagement.Domain.Options;
 using ErpManagement.Domain.SwaggerFilter;
 using ErpManagement.Domain;
@@ -273,6 +274,7 @@ app.UseRequestLocalization(localizationOptions);
 app.UseCors(Shared.CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<TenantSubscriptionMiddleware>();  // subscription gate — after auth
 app.MapHub<BroadcastHub>(Shared.RealimeViewData);
 app.UseExceptionHandler();
 app.MapControllers();

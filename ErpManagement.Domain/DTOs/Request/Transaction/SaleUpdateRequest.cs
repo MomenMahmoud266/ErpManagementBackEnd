@@ -16,6 +16,9 @@ public class SaleUpdateRequest
 
     public int? BillerId { get; set; }
 
+    [Required(ErrorMessage = Annotations.FieldIsRequired)]
+    public int BranchId { get; set; }
+
     [MaxLength(50)]
     public string? SaleCode { get; set; }
 

@@ -1,5 +1,7 @@
 ﻿using ErpManagement.DataAccess.DbContext;
 using ErpManagement.DataAccess.Repositories.Auth;
+using ErpManagement.DataAccess.Repositories.Core;
+using ErpManagement.DataAccess.Repositories.Inventory;
 using ErpManagement.DataAccess.Repositories.Organization;
 using ErpManagement.DataAccess.Repositories.People;
 using ErpManagement.DataAccess.Repositories.Products;
@@ -7,6 +9,8 @@ using ErpManagement.DataAccess.Repositories.Shared;
 using ErpManagement.DataAccess.Repositories.Transaction;
 using ErpManagement.DataAccess.Repositories.Transactions;
 using ErpManagement.Domain.Interfaces;
+using ErpManagement.Domain.Interfaces.Repositories.Core;
+using ErpManagement.Domain.Interfaces.Repositories.Inventory;
 using ErpManagement.Domain.Interfaces.Repositories.Organization;
 using ErpManagement.Domain.Interfaces.Repositories.People;
 using ErpManagement.Domain.Interfaces.Repositories.Products;
@@ -63,7 +67,28 @@ public class UnitOfWork(ErpManagementDbContext context, ICurrentTenant currentTe
     public ISaleReturnItemRepository SaleReturnItems { get; private set; } = new SaleReturnItemRepository(context, currentTenant);     // <-- added
     public ICountryRepository Countries { get; private set; } = new CountryRepository(context, currentTenant);     // <-- added
 
-    
+    // Clinic / Salon
+    public IAppointmentRepository Appointments { get; private set; } = new AppointmentRepository(context, currentTenant);
+    public IAppointmentItemRepository AppointmentItems { get; private set; } = new AppointmentItemRepository(context, currentTenant);
+
+    // Gym
+    public IMembershipPlanRepository MembershipPlans { get; private set; } = new MembershipPlanRepository(context, currentTenant);
+    public IMemberSubscriptionRepository MemberSubscriptions { get; private set; } = new MemberSubscriptionRepository(context, currentTenant);
+    public IMemberCheckInRepository MemberCheckIns { get; private set; } = new MemberCheckInRepository(context, currentTenant);
+
+    // Cashbox
+    public ICashboxRepository Cashboxes { get; private set; } = new CashboxRepository(context, currentTenant);
+    public ICashboxShiftRepository CashboxShifts { get; private set; } = new CashboxShiftRepository(context, currentTenant);
+    public ICashMovementRepository CashMovements { get; private set; } = new CashMovementRepository(context, currentTenant);
+
+    // Inventory periods (periodic costing)
+    public IInventoryPeriodRepository InventoryPeriods { get; private set; } = new InventoryPeriodRepository(context, currentTenant);
+    public IPhysicalCountRepository PhysicalCounts { get; private set; } = new PhysicalCountRepository(context, currentTenant);
+
+    // Core
+    public ITenantRepository Tenants { get; private set; } = new TenantRepository(context, currentTenant);
+
+
     public async Task<int> CompleteAsync() => await _context.SaveChangesAsync();
 
     public IDatabaseTransaction BeginTransaction() => new DatabaseTransaction(_context.Database.BeginTransaction());

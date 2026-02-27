@@ -6,6 +6,7 @@ namespace ErpManagement.API.Areas.Transactions.Controllers;
 
 [Area(Modules.Shared)]
 [ApiExplorerSettings(GroupName = Modules.Shared)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SalesController(ISaleService service) : ControllerBase
@@ -28,6 +29,7 @@ public class SalesController(ISaleService service) : ControllerBase
     }
 
     [HttpPost(ApiRoutes.Sale.Create)]
+    [Produces(typeof(Response<SaleGetByIdResponse>))]
     public async Task<IActionResult> CreateAsync(SaleCreateRequest model)
     {
         var response = await _service.CreateAsync(model);

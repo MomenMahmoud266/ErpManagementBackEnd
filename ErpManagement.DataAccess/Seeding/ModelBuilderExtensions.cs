@@ -1,5 +1,6 @@
 ﻿using ErpManagement.Domain.Models.Core;
 using ErpManagement.Domain.Models.Hr;
+using ErpManagement.Domain.Enums;
 
 namespace ErpManagement.DataAccess.Seeding;
 
@@ -20,7 +21,13 @@ public static class ModelBuilderExtensions
                 ContactPhone = "+1234567890",
                 Address = "Default Address",
                 IsActive = true,
-                IsDeleted = false
+                IsDeleted = false,
+                BusinessType = BusinessType.Retail,
+                EnableInventory = true,
+                EnableAppointments = false,
+                EnableMemberships = false,
+                EnableTables = false,
+                EnableKitchenRouting = false
             });
 
         #endregion
@@ -63,8 +70,7 @@ public static class ModelBuilderExtensions
                 EmailConfirmed = true,
                 IsActive = true,
                 TenantId = 1,  // ✅ VALID tenant exists
-                PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null!, SuperAdmin.Password),
-                VisiblePassword = SuperAdmin.Password
+                PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null!, SuperAdmin.Password)
             });
 
         modelBuilder.Entity<ApplicationUser>()
@@ -79,8 +85,7 @@ public static class ModelBuilderExtensions
                 EmailConfirmed = true,
                 IsActive = true,
                 TenantId = 1,  // ✅ ADDED - was missing!
-                PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null!, Admin.Password),
-                VisiblePassword = Admin.Password
+                PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(null!, Admin.Password)
             });
 
         modelBuilder.Entity<ApplicationUserRole>()

@@ -7,6 +7,7 @@ public class AuthLoginUserResponse
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public DateTime ExpiresOn { get; set; }
+    public int TenantId { get; set; }
     public int Company_Id { get; set; }
     public int? Department_Id { get; set; }
     public string ImagePath { get; set; } = string.Empty;

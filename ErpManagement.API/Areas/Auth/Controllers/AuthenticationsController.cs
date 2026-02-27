@@ -51,35 +51,11 @@ public class AuthenticationsController(IAuthenticationService service) : Control
         return StatusCode(statusCode: StatusCodes.Status500InternalServerError, response);
     }
 
-    [HttpGet(ApiRoutes.User.ShowPasswordToSpecificUser)]
-    [Produces(typeof(Response<string>))]
-    public async Task<IActionResult> ShowPasswordToSpecificUserAsync([FromRoute] string id)
-    {
-        var response = await _service.ShowPasswordToSpecificUserAsync(id);
-        if (response.IsSuccess)
-            return Ok(response);
-        else if (!response.IsSuccess)
-            return StatusCode(statusCode: StatusCodes.Status400BadRequest, response);
-        return StatusCode(statusCode: StatusCodes.Status500InternalServerError, response);
-    }
-
     [HttpPut(ApiRoutes.User.SetNewPasswordToSpecificUser)]
     [Produces(typeof(Response<AuthSetNewPasswordRequest>))]
     public async Task<IActionResult> SetNewPasswordToSpecificUserAsync(AuthSetNewPasswordRequest model)
     {
         var response = await _service.SetNewPasswordToSpecificUserAsync(model);
-        if (response.IsSuccess)
-            return Ok(response);
-        else if (!response.IsSuccess)
-            return StatusCode(statusCode: StatusCodes.Status400BadRequest, response);
-        return StatusCode(statusCode: StatusCodes.Status500InternalServerError, response);
-    }
-
-    [HttpPut(ApiRoutes.User.SetNewPasswordToSuperAdmin)]
-    [Produces(typeof(Response<string>))]
-    public async Task<IActionResult> SetNewPasswordToSuperAdminAsync([FromRoute] string newPassword)
-    {
-        var response = await _service.SetNewPasswordToSuperAdminAsync(newPassword);
         if (response.IsSuccess)
             return Ok(response);
         else if (!response.IsSuccess)

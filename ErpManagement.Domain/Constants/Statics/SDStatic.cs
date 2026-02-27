@@ -299,6 +299,63 @@ public static class SDStatic
             public const string Delete = "Delete/{id:int}";
         }
 
+        public class Tenant
+        {
+            public const string Me = "Me";
+        }
+
+        public class Appointment
+        {
+            public const string GetAll = "GetAll";
+            public const string Create = "Create";
+            public const string GetById = "GetById/{id}";
+            public const string Update = "Update/{id}";
+            public const string Delete = "Delete/{id}";
+            public const string CompleteAndInvoice = "CompleteAndInvoice/{id}";
+        }
+
+        public class Gym
+        {
+            public const string GetAllPlans = "GetAllPlans";
+            public const string CreatePlan = "CreatePlan";
+            public const string UpdatePlan = "UpdatePlan/{id}";
+            public const string DeletePlan = "DeletePlan/{id}";
+            public const string PurchaseMembership = "PurchaseMembership";
+            public const string CheckIn = "CheckIn";
+        }
+
+        public class Cashbox
+        {
+            public const string GetAll = "GetAll";
+            public const string Create = "Create";
+            public const string OpenShift = "OpenShift";
+            public const string CloseShift = "CloseShift";
+            public const string AddMovement = "AddMovement";
+            public const string ShiftById = "ShiftById/{id}";
+            public const string Ledger = "Ledger";
+        }
+
+        public class Statements
+        {
+            public const string Customer = "Customer";
+            public const string Supplier = "Supplier";
+        }
+
+        public class Reports
+        {
+            public const string ProfitLoss = "ProfitLoss";
+        }
+
+        public class InventoryPeriods
+        {
+            public const string GetAll = "GetAll";
+            public const string Create = "Create";
+            public const string GetById = "GetById/{id:int}";
+            public const string Close = "Close/{id:int}";
+            public const string AddPhysicalCount = "AddPhysicalCount/{periodId:int}";
+            public const string Delete = "Delete/{id:int}";
+        }
+
     }
 
     public static class Localization
