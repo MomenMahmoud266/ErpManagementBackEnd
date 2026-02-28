@@ -15,4 +15,6 @@ public interface ICashboxService
     Task<Response<CashMovementDto>> AddMovementAsync(CashMovementCreateRequest model, string userId);
     Task<Response<CashboxShiftGetByIdResponse>> GetShiftByIdAsync(int shiftId);
     Task<Response<CashLedgerResponse>> GetCashLedgerAsync(int branchId, DateTime from, DateTime to);
+    Task<Response<ShiftLedgerResponse>> GetShiftLedgerAsync(int shiftId);
+    Task<Response<TreasurySummaryResponse>> GetTreasurySummaryAsync(int branchId, DateTime from, DateTime to);
 }

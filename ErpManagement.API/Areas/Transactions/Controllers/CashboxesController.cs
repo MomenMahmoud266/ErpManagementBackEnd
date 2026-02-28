@@ -72,6 +72,14 @@ public class CashboxesController(ICashboxService service) : ControllerBase
         return response.IsSuccess ? Ok(response) : StatusCode(StatusCodes.Status400BadRequest, response);
     }
 
+    [HttpGet(ApiRoutes.Cashbox.ShiftLedger)]
+    [Produces(typeof(Response<ShiftLedgerResponse>))]
+    public async Task<IActionResult> GetShiftLedgerAsync([FromRoute] int id)
+    {
+        var response = await _service.GetShiftLedgerAsync(id);
+        return response.IsSuccess ? Ok(response) : StatusCode(StatusCodes.Status400BadRequest, response);
+    }
+
     [HttpGet(ApiRoutes.Cashbox.Ledger)]
     [Produces(typeof(Response<CashLedgerResponse>))]
     public async Task<IActionResult> GetLedgerAsync(
@@ -80,6 +88,17 @@ public class CashboxesController(ICashboxService service) : ControllerBase
         [FromQuery] DateTime to)
     {
         var response = await _service.GetCashLedgerAsync(branchId, from, to);
+        return response.IsSuccess ? Ok(response) : StatusCode(StatusCodes.Status400BadRequest, response);
+    }
+
+    [HttpGet(ApiRoutes.Cashbox.TreasurySummary)]
+    [Produces(typeof(Response<TreasurySummaryResponse>))]
+    public async Task<IActionResult> GetTreasurySummaryAsync(
+        [FromQuery] int branchId,
+        [FromQuery] DateTime from,
+        [FromQuery] DateTime to)
+    {
+        var response = await _service.GetTreasurySummaryAsync(branchId, from, to);
         return response.IsSuccess ? Ok(response) : StatusCode(StatusCodes.Status400BadRequest, response);
     }
 

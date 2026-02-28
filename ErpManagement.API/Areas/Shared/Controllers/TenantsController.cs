@@ -35,6 +35,7 @@ public class TenantsController(ErpManagementDbContext db, ICurrentTenant current
 
         var tenant = await _db.Tenants
             .AsNoTracking()
+            .Include(t => t.Currency)
             .FirstOrDefaultAsync(t => t.Id == tenantId && t.IsActive);
 
         if (tenant is null)
@@ -65,7 +66,10 @@ public class TenantsController(ErpManagementDbContext db, ICurrentTenant current
                 SubscriptionEndsAt = tenant.SubscriptionEndsAt,
                 IsSubscriptionActive = tenant.IsSubscriptionActive,
                 IsExpired = !tenant.IsAccessAllowed,
-                CurrencyCode = tenant.CurrencyCode,
+                CurrencyId = tenant.CurrencyId,
+                CurrencyCode = tenant.Currency?.Code ?? string.Empty,
+                CurrencySymbol = tenant.Currency?.Symbol ?? string.Empty,
+                CurrencyDecimalDigits = tenant.Currency?.DecimalDigits ?? 2,
                 CountryCode = tenant.CountryCode,
                 TimeZoneId = tenant.TimeZoneId,
                 TaxLabel = tenant.TaxLabel,

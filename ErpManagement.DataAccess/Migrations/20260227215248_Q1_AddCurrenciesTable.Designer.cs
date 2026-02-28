@@ -4,6 +4,7 @@ using ErpManagement.DataAccess.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ErpManagement.DataAccess.Migrations
 {
     [DbContext(typeof(ErpManagementDbContext))]
-    partial class ErpManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260227215248_Q1_AddCurrenciesTable")]
+    partial class Q1_AddCurrenciesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

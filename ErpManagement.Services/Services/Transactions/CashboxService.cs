@@ -224,13 +224,19 @@ public class CashboxService(IUnitOfWork unitOfWork) : ICashboxService
             x => cashboxIds.Contains(x.CashboxId),
             includeProperties: "Movements")).ToList();
 
-        // Opening balance = movements before 'from'
+        // Opening balance = OpeningCash of shifts that were open before 'from', plus net movements before 'from'
+        var shiftsOpenBefore = allShifts
+            .Where(s => s.OpenedAt < from && (!s.ClosedAt.HasValue || s.ClosedAt >= from))
+            .ToList();
+
+        decimal openingFromShifts = shiftsOpenBefore.Sum(s => s.OpeningCash);
+
         var beforeMovements = allShifts
             .SelectMany(s => s.Movements ?? new List<CashMovement>())
             .Where(m => m.CreatedAt < from)
             .ToList();
 
-        decimal openingBalance = beforeMovements.Sum(m =>
+        decimal openingBalance = openingFromShifts + beforeMovements.Sum(m =>
             m.Type == CashMovementType.CashIn ? m.Amount : -m.Amount);
 
         // Period movements
@@ -278,6 +284,142 @@ public class CashboxService(IUnitOfWork unitOfWork) : ICashboxService
                 TotalCashOut = totalOut,
                 ClosingBalance = openingBalance + totalIn - totalOut,
                 Lines = lines
+            },
+            IsSuccess = true
+        };
+    }
+
+    public async Task<Response<ShiftLedgerResponse>> GetShiftLedgerAsync(int shiftId)
+    {
+        var shift = await _unitOfWork.CashboxShifts
+            .GetFirstOrDefaultAsync(x => x.Id == shiftId,
+                includeProperties: "Cashbox,Movements");
+        if (shift is null)
+        {
+            string msg = Localization.CannotBeFound;
+            return new() { Error = msg, Message = msg, Data = null! };
+        }
+
+        var movements = (shift.Movements ?? new List<CashMovement>())
+            .OrderBy(m => m.CreatedAt)
+            .ToList();
+
+        decimal runningBalance = shift.OpeningCash;
+        var lines = new List<ShiftLedgerLineDto>();
+
+        foreach (var m in movements)
+        {
+            if (m.Type == CashMovementType.CashIn)
+                runningBalance += m.Amount;
+            else
+                runningBalance -= m.Amount;
+
+            lines.Add(new ShiftLedgerLineDto
+            {
+                Date = m.CreatedAt,
+                MovementId = m.Id,
+                Type = m.Type,
+                Amount = m.Amount,
+                Reason = m.Reason,
+                ReferenceType = m.ReferenceType,
+                ReferenceId = m.ReferenceId,
+                Balance = runningBalance
+            });
+        }
+
+        decimal totalIn = movements.Where(m => m.Type == CashMovementType.CashIn).Sum(m => m.Amount);
+        decimal totalOut = movements.Where(m => m.Type == CashMovementType.CashOut).Sum(m => m.Amount);
+        decimal expected = shift.OpeningCash + totalIn - totalOut;
+        decimal difference = shift.IsClosed && shift.ClosingCash.HasValue
+            ? shift.ClosingCash.Value - expected
+            : 0;
+
+        return new()
+        {
+            Data = new ShiftLedgerResponse
+            {
+                ShiftId = shift.Id,
+                CashboxId = shift.CashboxId,
+                CashboxName = shift.Cashbox?.Name ?? string.Empty,
+                OpenedAt = shift.OpenedAt,
+                OpeningCash = shift.OpeningCash,
+                IsClosed = shift.IsClosed,
+                ClosedAt = shift.ClosedAt,
+                ClosingCash = shift.ClosingCash,
+                TotalCashIn = totalIn,
+                TotalCashOut = totalOut,
+                ExpectedCash = expected,
+                Difference = difference,
+                Lines = lines
+            },
+            IsSuccess = true
+        };
+    }
+
+    public async Task<Response<TreasurySummaryResponse>> GetTreasurySummaryAsync(
+        int branchId, DateTime from, DateTime to)
+    {
+        var cashboxes = (await _unitOfWork.Cashboxes.GetAllAsync(
+            x => x.BranchId == branchId)).ToList();
+
+        if (!cashboxes.Any())
+        {
+            return new()
+            {
+                Data = new TreasurySummaryResponse { BranchId = branchId, From = from, To = to },
+                IsSuccess = true
+            };
+        }
+
+        var cashboxIds = cashboxes.Select(c => c.Id).ToList();
+        var cashboxMap = cashboxes.ToDictionary(c => c.Id, c => c.Name);
+
+        var allShifts = (await _unitOfWork.CashboxShifts.GetAllAsync(
+            x => cashboxIds.Contains(x.CashboxId) && x.OpenedAt >= from && x.OpenedAt <= to,
+            includeProperties: "Movements")).ToList();
+
+        var shiftSummaries = new List<TreasuryShiftSummaryDto>();
+        foreach (var shift in allShifts)
+        {
+            var movements = (shift.Movements ?? new List<CashMovement>()).ToList();
+            decimal cashIn = movements.Where(m => m.Type == CashMovementType.CashIn).Sum(m => m.Amount);
+            decimal cashOut = movements.Where(m => m.Type == CashMovementType.CashOut).Sum(m => m.Amount);
+            decimal expected = shift.OpeningCash + cashIn - cashOut;
+            decimal difference = shift.IsClosed && shift.ClosingCash.HasValue
+                ? shift.ClosingCash.Value - expected
+                : 0;
+
+            shiftSummaries.Add(new TreasuryShiftSummaryDto
+            {
+                ShiftId = shift.Id,
+                CashboxId = shift.CashboxId,
+                CashboxName = cashboxMap.TryGetValue(shift.CashboxId, out var name) ? name : string.Empty,
+                OpenedAt = shift.OpenedAt,
+                OpeningCash = shift.OpeningCash,
+                IsClosed = shift.IsClosed,
+                ClosedAt = shift.ClosedAt,
+                ExpectedCash = expected,
+                ClosingCash = shift.ClosingCash,
+                Difference = difference,
+                CashIn = cashIn,
+                CashOut = cashOut
+            });
+        }
+
+        return new()
+        {
+            Data = new TreasurySummaryResponse
+            {
+                BranchId = branchId,
+                From = from,
+                To = to,
+                TotalOpeningCash = shiftSummaries.Sum(s => s.OpeningCash),
+                TotalCashIn = shiftSummaries.Sum(s => s.CashIn),
+                TotalCashOut = shiftSummaries.Sum(s => s.CashOut),
+                TotalExpectedCash = shiftSummaries.Sum(s => s.ExpectedCash),
+                TotalClosingCash = shiftSummaries.Where(s => s.IsClosed).Sum(s => s.ClosingCash ?? 0),
+                TotalDifference = shiftSummaries.Sum(s => s.Difference),
+                Shifts = shiftSummaries
             },
             IsSuccess = true
         };

@@ -333,6 +333,8 @@ public static class SDStatic
             public const string AddMovement = "AddMovement";
             public const string ShiftById = "ShiftById/{id}";
             public const string Ledger = "Ledger";
+            public const string ShiftLedger = "ShiftLedger/{id}";
+            public const string TreasurySummary = "TreasurySummary";
         }
 
         public class Statements

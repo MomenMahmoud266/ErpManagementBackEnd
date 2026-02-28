@@ -8,7 +8,19 @@ public static class ModelBuilderExtensions
 {
     public static void SeedData(this ModelBuilder modelBuilder)
     {
-        #region Tenants (MUST BE FIRST - no FK dependencies)
+        #region Currencies (MUST BE FIRST - Tenant has FK to Currency)
+
+        modelBuilder.Entity<Currency>()
+            .HasData(
+            new Currency { Id = 1, Code = "EGP", Symbol = "E£", DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 2, Code = "USD", Symbol = "$",  DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 3, Code = "EUR", Symbol = "€",  DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 4, Code = "SAR", Symbol = "﷼",  DecimalDigits = 2, IsActive = true, IsDeleted = false }
+        );
+
+        #endregion
+
+        #region Tenants (depends on Currencies)
 
         modelBuilder.Entity<Tenant>()
             .HasData(
@@ -27,7 +39,14 @@ public static class ModelBuilderExtensions
                 EnableAppointments = false,
                 EnableMemberships = false,
                 EnableTables = false,
-                EnableKitchenRouting = false
+                EnableKitchenRouting = false,
+                CurrencyId = 1,
+                CountryCode = "EG",
+                TimeZoneId = "Africa/Cairo",
+                TaxLabel = "VAT",
+                CostingMethod = "Average",
+                InventoryMode = "Perpetual",
+                IsSubscriptionActive = true
             });
 
         #endregion

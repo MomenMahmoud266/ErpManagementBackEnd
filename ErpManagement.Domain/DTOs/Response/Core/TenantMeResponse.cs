@@ -19,7 +19,10 @@ public class TenantMeResponse
     public bool IsExpired { get; set; }
 
     // International
-    public string CurrencyCode { get; set; } = "EGP";
+    public int CurrencyId { get; set; }
+    public string CurrencyCode { get; set; } = string.Empty;
+    public string CurrencySymbol { get; set; } = string.Empty;
+    public int CurrencyDecimalDigits { get; set; }
     public string CountryCode { get; set; } = "EG";
     public string TimeZoneId { get; set; } = "Africa/Cairo";
     public string TaxLabel { get; set; } = "VAT";

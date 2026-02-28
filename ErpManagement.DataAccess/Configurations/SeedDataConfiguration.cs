@@ -12,7 +12,15 @@ public static class SeedDataConfiguration
 {
     public static void SeedData(this ModelBuilder modelBuilder)
     {
-        // 1. Seed Tenants FIRST (no FK dependencies)
+        // 0. Seed Currencies FIRST (Tenant has FK to Currency)
+        modelBuilder.Entity<Currency>().HasData(
+            new Currency { Id = 1, Code = "EGP", Symbol = "E£", DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 2, Code = "USD", Symbol = "$",  DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 3, Code = "EUR", Symbol = "€",  DecimalDigits = 2, IsActive = true, IsDeleted = false },
+            new Currency { Id = 4, Code = "SAR", Symbol = "﷼",  DecimalDigits = 2, IsActive = true, IsDeleted = false }
+        );
+
+        // 1. Seed Tenants (depends on Currencies)
         modelBuilder.Entity<Tenant>().HasData(
             new Tenant 
             { 
@@ -35,7 +43,14 @@ public static class SeedDataConfiguration
                 EnableAppointments = false,
                 EnableMemberships = false,
                 EnableTables = false,
-                EnableKitchenRouting = false
+                EnableKitchenRouting = false,
+                CurrencyId = 1,
+                CountryCode = "EG",
+                TimeZoneId = "Africa/Cairo",
+                TaxLabel = "VAT",
+                CostingMethod = "Average",
+                InventoryMode = "Perpetual",
+                IsSubscriptionActive = true
             }
         );
 

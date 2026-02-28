@@ -60,8 +60,7 @@ public class Tenant : BaseEntity
     public string CostingMethod { get; set; } = "Average"; // "Average" (MVP), future: "FIFO"
 
     // International / localization settings
-    [MaxLength(10)]
-    public string CurrencyCode { get; set; } = "EGP";   // ISO 4217
+    public int CurrencyId { get; set; } = 1;        // FK to Currencies (default EGP)
     [MaxLength(10)]
     public string CountryCode { get; set; } = "EG";     // ISO 3166-1 alpha-2
     [MaxLength(100)]
@@ -70,6 +69,7 @@ public class Tenant : BaseEntity
     public string TaxLabel { get; set; } = "VAT";
 
     // Navigation properties
+    public virtual Currency Currency { get; set; } = null!;
     public virtual ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>();
     public virtual ICollection<Branch> Branches { get; set; } = new HashSet<Branch>();
     public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();

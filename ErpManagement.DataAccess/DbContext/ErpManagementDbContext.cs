@@ -39,6 +39,7 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
     // Core
     public DbSet<HrGender> Genders { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<Currency> Currencies => Set<Currency>();
     public DbSet<Country> Countries { get; set; }
     public DbSet<State> States { get; set; }
 
@@ -118,6 +119,13 @@ public class ErpManagementDbContext : IdentityDbContext<ApplicationUser, Applica
         modelBuilder.Entity<ApplicationUserToken>().ToTable("Auth_UserTokens", "dbo");
 
         #region Fluent Api
+
+        // Configure Tenant → Currency relationship
+        modelBuilder.Entity<Tenant>()
+            .HasOne(t => t.Currency)
+            .WithMany(c => c.Tenants)
+            .HasForeignKey(t => t.CurrencyId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // ✅ NEW: Configure Branch → Country relationship
         modelBuilder.Entity<Branch>()
