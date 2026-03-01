@@ -48,7 +48,12 @@ public class TenantSubscriptionMiddleware
         }
 
         // 3. Resolve tenantId from JWT claim
-        var tidClaim = context.User.FindFirst(SDStatic.RequestClaims.TenantId)?.Value;
+
+        var tidClaim =
+                context.User?.FindFirstValue("tid") ??
+                context.User?.FindFirstValue("http://schemas.microsoft.com/identity/claims/tenantid") ??
+                context.User?.FindFirstValue(SDStatic.RequestClaims.TenantId);
+
         if (!int.TryParse(tidClaim, out var tenantId) || tenantId <= 0)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;

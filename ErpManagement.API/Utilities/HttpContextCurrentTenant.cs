@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Security.Claims;
+﻿using ErpManagement.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
-using ErpManagement.Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
+using static ErpManagement.Domain.Constants.Statics.SDStatic.ApiRoutes;
 
 namespace ErpManagement.WebApi.Services;
 
@@ -20,8 +21,14 @@ public class HttpContextCurrentTenant : ICurrentTenant
     {
         get
         {
-            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ErpManagement.Domain.Constants.Statics.SDStatic.RequestClaims.TenantId)?.Value;
-            return int.TryParse(claim, out var tid) && tid > 0 ? tid : 0;
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            var tid =
+                user?.FindFirstValue("tid") ??
+                user?.FindFirstValue("http://schemas.microsoft.com/identity/claims/tenantid") ??
+                user?.FindFirstValue(SDStatic.RequestClaims.TenantId);
+
+            return int.TryParse(tid, out var tenantId) ? tenantId : 0;
         }
     }
 }

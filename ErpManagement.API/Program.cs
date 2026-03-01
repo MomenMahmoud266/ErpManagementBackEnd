@@ -1,21 +1,23 @@
 using ErpManagement.API.Middlewares;
+using ErpManagement.API.Utilities;
+using ErpManagement.API.Utilities.SignalRConfig;
+using ErpManagement.DataAccess.DbContext;
+using ErpManagement.Domain;
 using ErpManagement.Domain.Options;
 using ErpManagement.Domain.SwaggerFilter;
-using ErpManagement.Domain;
+using ErpManagement.Services.Services.WebSocket;
+using ErpManagement.WebApi.Services;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using ErpManagement.API.Utilities;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using ErpManagement.API.Utilities.SignalRConfig;
-using ErpManagement.Services.Services.WebSocket;
-using Microsoft.Extensions.FileProviders;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using ErpManagement.WebApi.Services;
-using ErpManagement.DataAccess.DbContext;
+using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +33,12 @@ builder.Services.AddCors(options =>
 });
 
 
-
-builder.Services.AddControllers();
+builder.Services
+  .AddControllers()
+  .AddJsonOptions(o =>
+  {
+      o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+  });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -228,6 +234,7 @@ builder.Services.AddScoped<ICurrentTenant, HttpContextCurrentTenant>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 # region To take an instance from specific repository
@@ -275,7 +282,8 @@ app.UseCors(Shared.CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<TenantSubscriptionMiddleware>();  // subscription gate — after auth
-app.MapHub<BroadcastHub>(Shared.RealimeViewData);
+app.MapHub<BroadcastHub>(Shared.RealimeViewData).RequireCors(Shared.CorsPolicy); ;
+   
 app.UseExceptionHandler();
 app.MapControllers();
 
